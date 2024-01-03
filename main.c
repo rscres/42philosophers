@@ -6,7 +6,7 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 14:15:56 by renato            #+#    #+#             */
-/*   Updated: 2024/01/02 19:49:35 by renato           ###   ########.fr       */
+/*   Updated: 2024/01/02 22:49:39 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ void	check_input(int argc, char **argv)
 		{
 			printf("Error: all arguments must be numerical\n");
 			exit (2);
+		}
+		if (argv[i][0] == '-' || (i != 5 && argv[i][0] == '0'))
+		{
+			printf("Error: arguments must be larger than 0\n");
+			exit(2);
 		}
 	}
 }
