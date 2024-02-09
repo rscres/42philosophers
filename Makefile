@@ -1,28 +1,19 @@
 NAME = philo
 
 CC = cc
-FLAGS = -Wall -Werror- Wextra -g3 -03
+FLAGS = -Wall -Werror -Wextra -g3
 
 SRC_DIR = ./src/
 SRC = main.c
 
 OBJ = $(SRC:.c=.o)
 
-LIBS = -Llibft -lft
-
-LIBFT = ./libft/libft.a
-
-all: $(LIBFT) $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
 
-$(LIBFT):
-	@echo Creating Libft.
-	@make -C libft
-	@echo Libft done.
-
-%.o: %.c
+%.o: $(SRC_DIR)%.c
 	$(CC) $(FLAGS) -I. -I./includes/ -c $< -o $@
 
 clean:

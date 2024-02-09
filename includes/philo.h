@@ -6,13 +6,14 @@
 /*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:27:50 by rseelaen          #+#    #+#             */
-/*   Updated: 2023/10/16 16:28:23 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/09 19:17:49 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <stdio.h> 
 
 
 #endif
