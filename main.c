@@ -5,63 +5,76 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/02 14:15:56 by renato            #+#    #+#             */
-/*   Updated: 2024/01/02 22:49:39 by renato           ###   ########.fr       */
+/*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
+/*   Updated: 2024/02/14 01:59:07 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h>
 
-void	invalid_input_count(int argc)
-{
-	if (argc < 5)
-	{
-		printf("Error: not enough arguments\n");
-		exit(1);
-	}
-	if (argc > 6)
-	{
-		printf("Error: too many arguments\n");
-		exit(1);
-	}
-}
-
-int	is_numerical(char *arg)
-{
-	while (*arg)
-	{
-		if (*arg >= 48 && *arg <= 57)
-			return (1);
-		arg++;
-	}
-	return (0);
-}
-
-void	check_input(int argc, char **argv)
+int	init_philos(t_philo **philos, int nbr_of_philos, pthread_mutex_t *forks)
 {
 	int	i;
 
-	i = 0;
-	while (++i < argc)
+	*philos = malloc(nbr_of_philos * sizeof(t_philo));
+	i = -1;
+	while (++i < nbr_of_philos)
 	{
-		if (!is_numerical(argv[i]))
-		{
-			printf("Error: all arguments must be numerical\n");
-			exit (2);
-		}
-		if (argv[i][0] == '-' || (i != 5 && argv[i][0] == '0'))
-		{
-			printf("Error: arguments must be larger than 0\n");
-			exit(2);
-		}
+		*philos = malloc(sizeof(t_philo));
+		(*philos)->state = SLEEPING;
+		(*philos)->last_meal = 0;
+		(*philos)->fork_l = &forks[i];
+		if (i == 0)
+			(*philos)->fork_r = &forks[nbr_of_philos - 1];
+		else
+			(*philos)->fork_r = &forks[i - 1];
 	}
+}
+
+void	init_forks(pthread_mutex_t **forks, int nbr_of_philos)
+{
+	int	i;
+
+	*forks = malloc(sizeof(pthread_mutex_t) * nbr_of_philos);
+	i = -1;
+	while (++i < nbr_of_philos)
+		pthread_mutex_init(forks[i], NULL);
+}
+
+void	init_data(t_main *main, char **argv)
+{
+	(*main).dead_flag = FALSE;
+	(*main).nbr_of_philos = ft_atoi(argv[1]);
+	(*main).time_to_die = ft_atoi(argv[2]);
+	(*main).time_to_eat = ft_atoi(argv[3]);
+	(*main).time_to_sleep = ft_atoi(argv[4]);
+	if (argv[5])
+		(*main).nbr_of_meals = ft_atoi(argv[5]);
+	else
+		(*main).nbr_of_meals = -1;
+	init_forks(&main->forks, main->nbr_of_philos);
+	init_philos(&main->philos, main->nbr_of_philos, main->forks);
+}
+
+void	routine(void *main)
+{
+	printf("%d %d is sleeping\n", )
 }
 
 int	main(int argc, char **argv)
 {
-	if (argc < 5 || argc > 6)
-		invalid_input_count(argc);
-	check_input(argc, argv);
-	printf("Correct number  of arguments\n");
+	t_main	main;
+	int		i;
+
+	if (check_input(argc, argv))
+		return (1);
+	init_data(&main, argv);
+	i = -1;
+	while (++i < main.nbr_of_philos)
+		pthread_create(main.philos[i].thread, NULL, &routine, &main);
+	i = -1;
+	while (++i < main.nbr_of_philos)
+		pthread_join(main.philos[i].thread, NULL);
 	return (0);
 }

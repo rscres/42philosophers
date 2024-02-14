@@ -1,25 +1,41 @@
 NAME = philo
 
 CC = cc
-FLAGS = -Wall -Werror -Wextra -g3
+FLAGS = -Wall -Werror -Wextra -g3 -MMD -MP
 
-SRC_DIR = ./src/
-SRC = main.c
+SRC =	main.c			\
+		utils_libft.c	\
+		get_time.c		\
 
-OBJ = $(SRC:.c=.o)
+OBJ_DIR = obj
+OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
-all: $(NAME)
+# DEP_DIR = dep
+# DEP = $(patsubst $(OBJ_DIR)/%.o,$(DEP_DIR)/%.d,$(OBJ))
+
+all: directory $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
 
-%.o: $(SRC_DIR)%.c
-	$(CC) $(FLAGS) -I. -I./includes/ -c $< -o $@
+directory: $(OBJ_DIR)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+# $(DEP_DIR):
+# 	mkdir -p $(DEP_DIR)
+
+$(OBJ_DIR)/%.o: %.c
+	$(CC) $(FLAGS) -c $< -o $@
+
+# -includes: $(DEP)
 
 clean:
 	rm -rf $(OBJ)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -rf $(NAME)
 
-re: fclean
+re: fclean all

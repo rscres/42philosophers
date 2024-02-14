@@ -1,1 +1,3 @@
-# The Dining Philosophers Problem
+# 42 Philosophers
+
+## The Dining Philosophers Problem
