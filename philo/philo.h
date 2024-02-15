@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/14 18:56:30 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/14 22:50:14 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ enum	e_states
 
 typedef struct s_supervisor
 {
-	int	dead_flag;
+	int				dead_flag;
+	pthread_mutex_t	*dead;
+	pthread_mutex_t	*print;
 }	t_super;
 
 
@@ -71,5 +73,7 @@ int			get_interval(void);
 //input_validation.c
 
 int			check_input(int argc, char **argv);
+
+int			ft_atoi(const char *str);
 
 #endif //PHILO_H

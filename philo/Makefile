@@ -3,9 +3,10 @@ NAME = philo
 CC = cc
 FLAGS = -Wall -Werror -Wextra -g3 -MMD -MP
 
-SRC =	main.c			\
-		utils_libft.c	\
-		get_time.c		\
+SRC =	main.c				\
+		utils_libft.c		\
+		get_time.c			\
+		input_validation.c
 
 OBJ_DIR = obj
 OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
