@@ -6,7 +6,7 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/16 01:06:17 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/16 01:17:26 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@ void	print_status(int id, char *status, size_t time, t_super *super)
 	pthread_mutex_lock(super->print);
 	printf("%zu %d %s\n", time, id, status);
 	pthread_mutex_unlock(super->print);
+}
+
+void	unlock_forks(pthread_mutex_t *forks, int nbr_of_philos)
+{
+	int	i;
+
+	i = -1;
+	while (++i < nbr_of_philos)
+		pthread_mutex_unlock(&forks[i]);
 }
 
 int	init_philos(t_philo **philos, int nbr_of_philos, t_main main)
@@ -91,18 +100,18 @@ void	*supervisor(void *main)
 		while (i < m->nbr_of_philos)
 		{
 			if (get_cur_time() - m->philos[i].last_meal > (size_t)m->time_to_die
-				&& m->philos[i].state != STOP && m->philos[i].state != EATING)
+				&& m->philos[i].state != FULL && m->philos[i].state != EATING)
 			{
 				m->super->dead_flag = TRUE;
 				print_status(m->philos[i].id, "died", get_interval(),
 					m->super);
+				unlock_forks(m->forks, m->nbr_of_philos);
 				break ;
 			}
 			i++;
-			usleep(50);
 		}
+		usleep(100);
 	}
-	printf("supervisor dead\n");
 	return (0);
 }
 
@@ -155,14 +164,13 @@ int	eat(t_philo *p)
 			return (1);
 	}
 	p->state = EATING;
+	p->last_meal = get_cur_time();
 	print_status(p->id, "is eating", get_interval(), p->super);
 	usleep(p->time_to_eat * 1000);
-	p->last_meal = get_cur_time();
 	pthread_mutex_unlock(p->fork_l);
 	pthread_mutex_unlock(p->fork_r);
 	p->state = THINKING;
 	print_status(p->id, "is thinking", get_interval(), p->super);
-	// usleep(50);
 	return (0);
 }
 
@@ -185,7 +193,7 @@ void	*routine(void *philo)
 		if (p->super->dead_flag == TRUE || (p->nbr_of_meals != -1
 				&& meals >= p->nbr_of_meals))
 		{
-			p->state = STOP;
+			p->state = FULL;
 			break ;
 		}
 		if (rest(p))
@@ -199,7 +207,6 @@ void	*routine(void *philo)
 			break ;
 		}
 	}
-	printf("philo %d dead\n", p->id);
 	return (0);
 }
 
@@ -207,22 +214,15 @@ int	main(int argc, char **argv)
 {
 	int		i;
 	t_main	main;
-	// __uint32_t start = get_cur_time();
 
 	if (check_input(argc, argv))
 		return (1);
 	init_data(&main, argv);
-	// printf("time_to_die): %u\n", main.time_to_die);
-	// printf("cur_time: %u\n", start);
-	// sleep(1);
-	// printf("cur_time: %u\n", get_cur_time() - start);
-	// printf("cur_time: %u\n", get_interval());
 	i = -1;
 	while (++i < main.nbr_of_philos)
 		pthread_create(&main.philos[i].thread, NULL, &routine,
 			(void *)&main.philos[i]);
 	pthread_create(&main.supervisor, NULL, &supervisor, &main);
-	printf("supervisor created\n");
 	i = -1;
 	while (++i < main.nbr_of_philos)
 		pthread_join(main.philos[i].thread, NULL);

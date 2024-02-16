@@ -6,7 +6,7 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/16 00:49:18 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/16 01:15:29 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ enum	e_states
 	THINKING,
 	SLEEPING,
 	DEAD,
-	STOP
+	FULL
 };
 
 typedef struct s_supervisor
