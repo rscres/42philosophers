@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/15 00:48:53 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/15 21:12:51 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	init_philos(t_philo **philos, int nbr_of_philos, t_main main)
 {
 	int	i;
 
-	*philos = malloc(nbr_of_philos * sizeof(t_philo));
+	*philos = malloc(sizeof(t_philo) * nbr_of_philos);
 	if (!*philos)
 		return (1);
 	i = -1;
@@ -58,26 +58,21 @@ int	init_forks(pthread_mutex_t **forks, int nbr_of_philos)
 	int	i;
 
 	*forks = malloc(sizeof(pthread_mutex_t) * nbr_of_philos);
-	if (!forks)
+	if (!*forks)
 		return (1);
 	i = -1;
 	while (++i < nbr_of_philos)
-		pthread_mutex_init((*forks) + i, NULL);
+		pthread_mutex_init(&(*forks)[i], NULL);
 	return (0);
 }
 
 void	init_data(t_main *main, char **argv)
 {
 	(*main).super = malloc(sizeof(t_super));
-	if (!(*main).super)
-		return ;
 	(*main).super->dead = malloc(sizeof(pthread_mutex_t));
-	if (!(*main).super->dead)
-		return ;
 	(*main).super->print = malloc(sizeof(pthread_mutex_t));
-	if (!(*main).super->print)
-		return ;
 	pthread_mutex_init((*main).super->dead, NULL);
+	pthread_mutex_init((*main).super->print, NULL);
 	(*main).super->dead_flag = FALSE;
 	(*main).nbr_of_philos = ft_atoi(argv[1]);
 	(*main).time_to_die = ft_atoi(argv[2]);
@@ -91,6 +86,31 @@ void	init_data(t_main *main, char **argv)
 	init_philos(&main->philos, main->nbr_of_philos, *main);
 }
 
+void	*supervisor(void *main)
+{
+	t_main	*m;
+	int		i;
+
+	m = (t_main *)main;
+	while (m->super->dead_flag == FALSE)
+	{
+		i = 0;
+		while (i < m->nbr_of_philos)
+		{
+			printf("last_meal: %zu\n", m->philos[i].last_meal);
+			if (m->philos[i].last_meal + m->time_to_die < get_cur_time())
+			{
+				m->super->dead_flag = TRUE;
+				print_status(m->philos[i].id, "died", get_interval(),
+					m->super);
+				break ;
+			}
+			i++;
+		}
+	}
+	return (0);
+}
+
 int	rest(t_philo *p)
 {
 	print_status(p->id, "is sleeping", get_interval(), p->super);
@@ -100,7 +120,7 @@ int	rest(t_philo *p)
 	return (0);
 }
 
-int	eat(t_philo *p)
+int	eat_odd(t_philo *p)
 {
 	pthread_mutex_lock(p->fork_l);
 	if (p->super->dead_flag == TRUE)
@@ -110,6 +130,34 @@ int	eat(t_philo *p)
 	if (p->super->dead_flag == TRUE)
 		return (1);
 	print_status(p->id, "has taken a fork", get_interval(), p->super);
+	return (0);
+}
+
+int	eat_even(t_philo *p)
+{
+	pthread_mutex_lock(p->fork_r);
+	if (p->super->dead_flag == TRUE)
+		return (1);
+	print_status(p->id, "has taken a fork", get_interval(), p->super);
+	pthread_mutex_lock(p->fork_l);
+	if (p->super->dead_flag == TRUE)
+		return (1);
+	print_status(p->id, "has taken a fork", get_interval(), p->super);
+	return (0);
+}
+
+int	eat(t_philo *p)
+{
+	if (p->id % 2 == 0)
+	{
+		if (eat_even(p))
+			return (1);
+	}
+	else
+	{
+		if (eat_odd(p))
+			return (1);
+	}
 	print_status(p->id, "is eating", get_interval(), p->super);
 	p->last_meal = get_cur_time();
 	usleep(p->time_to_eat * 1000);
@@ -122,16 +170,13 @@ int	eat(t_philo *p)
 void	*routine(void *philo)
 {
 	t_philo	*p;
-	// size_t	start;
-	// int		i = 0;
 	int		meals;
 
 	p = (t_philo *)philo;
 	if (p->id % 2 == 0)
 		usleep(2000);
-	// start = get_cur_time();
 	meals = 0;
-	while (p->super->dead_flag == FALSE && (p->nbr_of_meals == -1 || meals < p->nbr_of_meals))
+	while (p->super->dead_flag == FALSE)
 	{
 		if (eat(p))
 			break ;
@@ -164,8 +209,10 @@ int	main(int argc, char **argv)
 	while (++i < main.nbr_of_philos)
 		pthread_create(&main.philos[i].thread, NULL, &routine,
 			(void *)&main.philos[i]);
+	pthread_create(&main.supervisor, NULL, &supervisor, &main);
 	i = -1;
 	while (++i < main.nbr_of_philos)
 		pthread_join(main.philos[i].thread, NULL);
+	pthread_join(main.supervisor, NULL);
 	return (0);
 }

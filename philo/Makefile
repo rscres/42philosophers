@@ -1,7 +1,8 @@
 NAME = philo
 
 CC = cc
-FLAGS = -Wall -Werror -Wextra -g3 -MMD -MP
+FLAGS = -Wall -Werror -Wextra -g3 
+# -MMD -MP
 
 SRC =	main.c				\
 		utils_libft.c		\
@@ -11,13 +12,15 @@ SRC =	main.c				\
 OBJ_DIR = obj
 OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
+INC = ./includes/
+
 # DEP_DIR = dep
 # DEP = $(patsubst $(OBJ_DIR)/%.o,$(DEP_DIR)/%.d,$(OBJ))
 
 all: directory $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) -pthread $(OBJ) -o $(NAME)
 
 directory: $(OBJ_DIR)
 
@@ -28,7 +31,7 @@ $(OBJ_DIR):
 # 	mkdir -p $(DEP_DIR)
 
 $(OBJ_DIR)/%.o: %.c
-	$(CC) $(FLAGS) -c $< -o $@
+	$(CC) $(FLAGS) -pthread -c $< -o $@
 
 # -includes: $(DEP)
 
