@@ -6,7 +6,7 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 16:25:46 by renato            #+#    #+#             */
-/*   Updated: 2024/02/12 00:24:52 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/15 23:57:42 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ __uint32_t	get_cur_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-int	get_interval(void)
+__uint32_t	get_interval(void)
 {
 	static __uint32_t	start;
 	__uint32_t			current;
@@ -31,5 +31,5 @@ int	get_interval(void)
 		return (0);
 	}
 	current = get_cur_time();
-	return ((int)(current - start));
+	return ((current - start));
 }

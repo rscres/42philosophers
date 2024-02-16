@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/15 18:52:57 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/16 00:49:18 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ enum	e_states
 	EATING,
 	THINKING,
 	SLEEPING,
-	DEAD
+	DEAD,
+	STOP
 };
 
 typedef struct s_supervisor
@@ -69,7 +70,7 @@ typedef struct s_main
 //set_time.c
 
 __uint32_t	get_cur_time(void);
-int			get_interval(void);
+__uint32_t	get_interval(void);
 
 //input_validation.c
 

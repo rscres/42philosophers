@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/15 21:12:51 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/16 01:06:17 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_putendl(char *s)
-{
-	while (*s)
-		write(1, s++, 1);
-	write(1, "\n", 1);
-}
 
 void	print_status(int id, char *status, size_t time, t_super *super)
 {
@@ -97,8 +90,8 @@ void	*supervisor(void *main)
 		i = 0;
 		while (i < m->nbr_of_philos)
 		{
-			printf("last_meal: %zu\n", m->philos[i].last_meal);
-			if (m->philos[i].last_meal + m->time_to_die < get_cur_time())
+			if (get_cur_time() - m->philos[i].last_meal > (size_t)m->time_to_die
+				&& m->philos[i].state != STOP && m->philos[i].state != EATING)
 			{
 				m->super->dead_flag = TRUE;
 				print_status(m->philos[i].id, "died", get_interval(),
@@ -106,13 +99,16 @@ void	*supervisor(void *main)
 				break ;
 			}
 			i++;
+			usleep(50);
 		}
 	}
+	printf("supervisor dead\n");
 	return (0);
 }
 
 int	rest(t_philo *p)
 {
+	p->state = SLEEPING;
 	print_status(p->id, "is sleeping", get_interval(), p->super);
 	if (p->super->dead_flag == TRUE)
 		return (1);
@@ -158,12 +154,15 @@ int	eat(t_philo *p)
 		if (eat_odd(p))
 			return (1);
 	}
+	p->state = EATING;
 	print_status(p->id, "is eating", get_interval(), p->super);
-	p->last_meal = get_cur_time();
 	usleep(p->time_to_eat * 1000);
+	p->last_meal = get_cur_time();
 	pthread_mutex_unlock(p->fork_l);
 	pthread_mutex_unlock(p->fork_r);
+	p->state = THINKING;
 	print_status(p->id, "is thinking", get_interval(), p->super);
+	// usleep(50);
 	return (0);
 }
 
@@ -173,27 +172,34 @@ void	*routine(void *philo)
 	int		meals;
 
 	p = (t_philo *)philo;
+	p->last_meal = get_cur_time();
 	if (p->id % 2 == 0)
 		usleep(2000);
 	meals = 0;
-	while (p->super->dead_flag == FALSE)
+	while (p->super->dead_flag == FALSE && (p->nbr_of_meals == -1
+			|| meals < p->nbr_of_meals))
 	{
 		if (eat(p))
 			break ;
 		meals++;
-		if (p->super->dead_flag == TRUE)
+		if (p->super->dead_flag == TRUE || (p->nbr_of_meals != -1
+				&& meals >= p->nbr_of_meals))
+		{
+			p->state = STOP;
 			break ;
+		}
 		if (rest(p))
 			break ;
 		if (p->super->dead_flag == TRUE)
 			break ;
-		if (p->last_meal + p->time_to_die < get_cur_time())
+		if (get_cur_time() - p->last_meal > (size_t)p->time_to_die)
 		{
 			p->super->dead_flag = TRUE;
 			print_status(p->id, "died", get_interval(), p->super);
 			break ;
 		}
 	}
+	printf("philo %d dead\n", p->id);
 	return (0);
 }
 
@@ -201,15 +207,22 @@ int	main(int argc, char **argv)
 {
 	int		i;
 	t_main	main;
+	// __uint32_t start = get_cur_time();
 
 	if (check_input(argc, argv))
 		return (1);
 	init_data(&main, argv);
+	// printf("time_to_die): %u\n", main.time_to_die);
+	// printf("cur_time: %u\n", start);
+	// sleep(1);
+	// printf("cur_time: %u\n", get_cur_time() - start);
+	// printf("cur_time: %u\n", get_interval());
 	i = -1;
 	while (++i < main.nbr_of_philos)
 		pthread_create(&main.philos[i].thread, NULL, &routine,
 			(void *)&main.philos[i]);
 	pthread_create(&main.supervisor, NULL, &supervisor, &main);
+	printf("supervisor created\n");
 	i = -1;
 	while (++i < main.nbr_of_philos)
 		pthread_join(main.philos[i].thread, NULL);
