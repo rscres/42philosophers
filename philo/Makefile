@@ -7,6 +7,7 @@ FLAGS = -Wall -Werror -Wextra -g3
 SRC =	main.c				\
 		utils_libft.c		\
 		get_time.c			\
+		init.c				\
 		input_validation.c
 
 OBJ_DIR = obj

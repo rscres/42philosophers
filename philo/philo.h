@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/16 01:15:29 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/16 20:59:36 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ typedef struct s_philo
 	int				time_to_sleep;
 	int				nbr_of_meals;
 	t_super			*super;
+	pthread_mutex_t	*gen_m;
+	pthread_mutex_t	*state_m;
+	pthread_mutex_t	*meal_m;
 	pthread_mutex_t	*fork_l;
 	pthread_mutex_t	*fork_r;
 }	t_philo;
@@ -75,6 +78,12 @@ __uint32_t	get_interval(void);
 //input_validation.c
 
 int			check_input(int argc, char **argv);
+
+//init.c
+
+void		init_data(t_main *main, char **argv);
+
+//utils_libft.c
 
 int			ft_atoi(const char *str);
 
