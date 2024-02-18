@@ -6,26 +6,24 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 19:10:15 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/18 00:21:08 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/18 01:37:09 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_philos(t_philo **philos, int nbr_of_philos, t_main main)
+int	init_philos(t_philo **philos, int nbr_of_philos, t_main main, int i)
 {
-	int	i;
-
 	*philos = malloc(sizeof(t_philo) * nbr_of_philos);
 	if (!*philos)
 		return (1);
-	i = -1;
 	while (++i < nbr_of_philos)
 	{
 		(*philos)[i].super = main.super;
 		(*philos)[i].id = i + 1;
 		(*philos)[i].state = THINKING;
 		(*philos)[i].last_meal = 0;
+		(*philos)[i].nbr_of_philos = main.nbr_of_philos;
 		(*philos)[i].time_to_die = main.time_to_die;
 		(*philos)[i].time_to_eat = main.time_to_eat;
 		(*philos)[i].time_to_sleep = main.time_to_sleep;
@@ -71,5 +69,5 @@ void	init_data(t_main *main, char **argv)
 	else
 		(*main).nbr_of_meals = -1;
 	init_forks(&main->forks, main->nbr_of_philos);
-	init_philos(&main->philos, main->nbr_of_philos, *main);
+	init_philos(&main->philos, main->nbr_of_philos, *main, -1);
 }

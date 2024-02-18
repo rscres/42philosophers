@@ -6,7 +6,7 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/18 00:50:41 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/18 01:43:16 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ typedef struct s_supervisor
 	pthread_mutex_t	*print;
 }	t_super;
 
-
 typedef struct s_philo
 {
 	pthread_t		thread;
 	int				id;
 	int				state;
 	size_t			last_meal;
+	int				nbr_of_philos;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -95,8 +95,12 @@ void		print_status(int id, char *status, size_t time, t_super *super);
 
 //checks.c
 
-int			is_dead(t_philo *philo);
+int			is_dead(t_philo *philo, int fork_l, int fork_r);
 int			check_state(t_philo *philo);
+
+//routine.c
+
+void		*routine(void *p);
 
 //utils_libft.c
 

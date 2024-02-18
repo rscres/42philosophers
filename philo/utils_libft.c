@@ -6,7 +6,7 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 15:45:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/12 00:23:49 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/18 01:28:48 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static int	is_whitespace(char c)
 	return (0);
 }
 
-//Converts a string to an integer
 int	ft_atoi(const char *str)
 {
 	int	num;

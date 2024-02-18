@@ -6,58 +6,11 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/18 00:49:36 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/18 01:47:19 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	think(t_philo *philo)
-{
-	pthread_mutex_lock(philo->state_m);
-	philo->state = THINKING;
-	print_status(philo->id, "is thinking", get_interval(), philo->super);
-	pthread_mutex_unlock(philo->state_m);
-	usleep(100);
-}
-
-int	rest(t_philo *philo)
-{
-	pthread_mutex_lock(philo->state_m);
-	philo->state = SLEEPING;
-	print_status(philo->id, "is sleeping", get_interval(), philo->super);
-	pthread_mutex_unlock(philo->state_m);
-	usleep(philo->time_to_sleep * 1000);
-	return (0);
-}
-
-void	*routine(void *p)
-{
-	t_philo	*philo;
-	int		meals;
-
-	philo = (t_philo *)p;
-	pthread_mutex_lock(philo->state_m);
-	philo->last_meal = 0;
-	pthread_mutex_unlock(philo->state_m);
-	meals = 0;
-	while (!check_state(philo) && !is_dead(philo))
-	{
-		if (eat(philo))
-			break ;
-		meals++;
-		if (philo->nbr_of_meals != -1 && meals >= philo->nbr_of_meals)
-		{
-			pthread_mutex_lock(philo->state_m);
-			philo->state = FULL;
-			pthread_mutex_unlock(philo->state_m);
-			break ;
-		}
-		think(philo);
-		rest(philo);
-	}
-	return (NULL);
-}
 
 void	free_data(t_main *main)
 {
@@ -67,8 +20,7 @@ void	free_data(t_main *main)
 	while (++i < main->nbr_of_philos)
 	{
 		pthread_mutex_destroy(main->philos[i].state_m);
-		pthread_mutex_destroy(main->philos[i].fork_l);
-		pthread_mutex_destroy(main->philos[i].fork_r);
+		pthread_mutex_destroy(&main->forks[i]);
 		free(main->philos[i].state_m);
 	}
 	pthread_mutex_destroy(main->super->print);
