@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 19:10:15 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/16 20:59:55 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/18 00:21:08 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,8 @@ int	init_philos(t_philo **philos, int nbr_of_philos, t_main main)
 			(*philos)[i].fork_r = &main.forks[nbr_of_philos - 1];
 		else
 			(*philos)[i].fork_r = &main.forks[i - 1];
-		(*philos)[i].gen_m = malloc(sizeof(pthread_mutex_t));
 		(*philos)[i].state_m = malloc(sizeof(pthread_mutex_t));
-		(*philos)[i].meal_m = malloc(sizeof(pthread_mutex_t));
-		pthread_mutex_init((*philos)[i].gen_m, NULL);
 		pthread_mutex_init((*philos)[i].state_m, NULL);
-		pthread_mutex_init((*philos)[i].meal_m, NULL);
 	}
 	return (0);
 }

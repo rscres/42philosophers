@@ -8,6 +8,10 @@ SRC =	main.c				\
 		utils_libft.c		\
 		get_time.c			\
 		init.c				\
+		supervisor.c		\
+		eat.c				\
+		print.c				\
+		checks.c			\
 		input_validation.c
 
 OBJ_DIR = obj
