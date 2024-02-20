@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_time.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 16:25:46 by renato            #+#    #+#             */
-/*   Updated: 2024/02/15 23:57:42 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/19 21:23:45 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,14 @@ __uint32_t	get_interval(void)
 	}
 	current = get_cur_time();
 	return ((current - start));
+}
+
+int	ft_usleep(size_t time)
+{
+	u_int64_t	start;
+
+	start = get_cur_time();
+	while ((get_cur_time() - start) < time)
+		usleep(time / 10);
+	return (0);
 }

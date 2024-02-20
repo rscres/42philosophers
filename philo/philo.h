@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/18 01:43:16 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/19 22:59:44 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 enum	e_states
 {
+	ALIVE,
 	EATING,
 	THINKING,
 	SLEEPING,
@@ -34,6 +35,7 @@ enum	e_states
 typedef struct s_supervisor
 {
 	int				dead_flag;
+	int				philo_full;
 	pthread_mutex_t	*dead;
 	pthread_mutex_t	*print;
 }	t_super;
@@ -51,8 +53,9 @@ typedef struct s_philo
 	int				nbr_of_meals;
 	t_super			*super;
 	pthread_mutex_t	*state_m;
-	pthread_mutex_t	*fork_l;
-	pthread_mutex_t	*fork_r;
+	pthread_mutex_t	*meal_m;
+	pthread_mutex_t	*first_fork;
+	pthread_mutex_t	*second_fork;
 }	t_philo;
 
 typedef struct s_main
@@ -95,7 +98,7 @@ void		print_status(int id, char *status, size_t time, t_super *super);
 
 //checks.c
 
-int			is_dead(t_philo *philo, int fork_l, int fork_r);
+int			any_dead_philo(t_philo *philo);
 int			check_state(t_philo *philo);
 
 //routine.c
@@ -105,5 +108,7 @@ void		*routine(void *p);
 //utils_libft.c
 
 int			ft_atoi(const char *str);
+
+int			ft_usleep(size_t time);
 
 #endif //PHILO_H

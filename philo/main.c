@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/18 01:47:19 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/19 23:00:07 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,11 @@ int	main(int argc, char **argv)
 	init_data(&main, argv);
 	i = -1;
 	get_interval();
+	pthread_mutex_lock(main.super->dead);
 	while (++i < main.nbr_of_philos)
 		pthread_create(&main.philos[i].thread, NULL, &routine,
 			(void *)&main.philos[i]);
-	pthread_create(&main.supervisor, NULL, &supervisor, &main);
+	// pthread_create(&main.supervisor, NULL, &supervisor, &main);
 	i = -1;
 	while (++i < main.nbr_of_philos)
 		pthread_join(main.philos[i].thread, NULL);
