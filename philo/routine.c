@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 01:06:56 by renato            #+#    #+#             */
-/*   Updated: 2024/02/19 22:50:24 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/20 01:46:35 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,48 +25,11 @@ int	rest(t_philo *philo)
 	return (0);
 }
 
-int	check_flag(t_philo *philo)
-{
-	pthread_mutex_lock(philo->super->dead);
-	if (philo->super->dead_flag == TRUE)
-	{
-		pthread_mutex_unlock(philo->super->dead);
-		return (1);
-	}
-	pthread_mutex_unlock(philo->super->dead);
-	return (0);
-}
-
-void	*check_timeout(void *p)
-{
-	t_philo	*philo = (t_philo *)p;
-	int		time_to_die = philo->time_to_die;
-
-	while (1)
-	{
-		if (check_flag(philo))
-			break ;
-		pthread_mutex_lock(philo->meal_m);
-		if (get_interval() - philo->last_meal > (size_t)time_to_die)
-		{
-			pthread_mutex_unlock(philo->meal_m);
-			pthread_mutex_lock(philo->super->dead);
-			philo->super->dead_flag = TRUE;
-			pthread_mutex_unlock(philo->super->dead);
-			print_status(philo->id, "died", get_interval(), philo->super);
-			break ;
-		}
-		pthread_mutex_unlock(philo->meal_m);
-		usleep(1000);
-	}
-	return (NULL);
-}
-
 void	*routine(void *p)
 {
-	t_philo	*philo;
-	int		meals;
-	pthread_t timeout_thread;
+	t_philo		*philo;
+	int			meals;
+	pthread_t	timeout_thread;
 
 	philo = (t_philo *)p;
 	pthread_mutex_lock(philo->meal_m);
@@ -74,13 +37,14 @@ void	*routine(void *p)
 	pthread_mutex_unlock(philo->meal_m);
 	meals = 0;
 	usleep(100 * philo->id);
-	pthread_create(&timeout_thread, NULL, check_timeout, philo);
-	while (philo->state != FULL && !check_flag(philo))
+	pthread_create(&timeout_thread, NULL, supervisor, philo);
+	pthread_detach(timeout_thread);
+	while (!check_state(philo) && !any_dead_philo(philo))
 	{
+
 		if (eat(philo))
 			break ;
-		meals++;
-		if (philo->nbr_of_meals != -1 && meals == philo->nbr_of_meals)
+		if (++meals == philo->nbr_of_meals || check_state(philo))
 		{
 			pthread_mutex_lock(philo->state_m);
 			philo->state = FULL;
@@ -90,6 +54,6 @@ void	*routine(void *p)
 		think(philo);
 		rest(philo);
 	}
-	pthread_join(timeout_thread, NULL);
+
 	return (NULL);
 }
