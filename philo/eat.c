@@ -6,7 +6,7 @@
 /*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 00:46:55 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 18:16:58 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/21 19:04:41 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	eat(t_philo *philo)
 	pthread_mutex_lock(&philo->gen_m);
 	philo->meals_had++;
 	pthread_mutex_unlock(&philo->gen_m);
-	pthread_mutex_unlock(&philo->super->dead);
 	usleep(philo->time_to_eat * 1000);
 	if (check_full(philo))
 	{
