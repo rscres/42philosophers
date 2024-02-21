@@ -6,7 +6,7 @@
 /*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 01:51:55 by renato            #+#    #+#             */
-/*   Updated: 2024/02/14 21:28:28 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/21 20:25:40 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	is_num(char **str)
 		if (tmp[0] == '-' || (i != 5 && tmp[0] == '0'))
 		{
 			printf("Error: arguments must be larger than 0\n");
-			return (2);
+			return (0);
 		}
 		while (*tmp)
 		{
