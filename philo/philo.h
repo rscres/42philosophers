@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/19 22:59:44 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/21 02:49:17 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ typedef struct s_supervisor
 {
 	int				dead_flag;
 	int				philo_full;
-	pthread_mutex_t	*dead;
-	pthread_mutex_t	*print;
+	pthread_mutex_t	dead;
+	pthread_mutex_t	print;
 }	t_super;
 
 typedef struct s_philo
@@ -51,9 +51,10 @@ typedef struct s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nbr_of_meals;
+	int				meals_had;
 	t_super			*super;
-	pthread_mutex_t	*state_m;
-	pthread_mutex_t	*meal_m;
+	pthread_mutex_t	state_m;
+	pthread_mutex_t	meal_m;
 	pthread_mutex_t	*first_fork;
 	pthread_mutex_t	*second_fork;
 }	t_philo;
@@ -98,8 +99,9 @@ void		print_status(int id, char *status, size_t time, t_super *super);
 
 //checks.c
 
-int			any_dead_philo(t_philo *philo);
-int			check_state(t_philo *philo);
+int			stop_check(t_philo *philo);
+int			check_full(t_philo *philo);
+int			halt(t_philo *philos);
 
 //routine.c
 

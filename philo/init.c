@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 19:10:15 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/19 21:39:07 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/21 02:49:09 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,17 @@ int	init_philos(t_philo **philos, int nbr_of_philos, t_main main, int i)
 	{
 		(*philos)[i].super = main.super;
 		(*philos)[i].id = i + 1;
-		(*philos)[i].state = THINKING;
+		(*philos)[i].state = ALIVE;
 		(*philos)[i].last_meal = 0;
 		(*philos)[i].nbr_of_philos = main.nbr_of_philos;
 		(*philos)[i].time_to_die = main.time_to_die;
 		(*philos)[i].time_to_eat = main.time_to_eat;
 		(*philos)[i].time_to_sleep = main.time_to_sleep;
 		(*philos)[i].nbr_of_meals = main.nbr_of_meals;
+		(*philos)[i].meals_had = 0;
 		assign_forks(&(*philos)[i], main, i);
-		(*philos)[i].state_m = malloc(sizeof(pthread_mutex_t));
-		pthread_mutex_init((*philos)[i].state_m, NULL);
-		(*philos)[i].meal_m = malloc(sizeof(pthread_mutex_t));
-		pthread_mutex_init((*philos)[i].meal_m, NULL);
+		pthread_mutex_init(&(*philos)[i].state_m, NULL);
+		pthread_mutex_init(&(*philos)[i].meal_m, NULL);
 	}
 	return (0);
 }
@@ -67,10 +66,8 @@ int	init_forks(pthread_mutex_t **forks, int nbr_of_philos)
 void	init_data(t_main *main, char **argv)
 {
 	(*main).super = malloc(sizeof(t_super));
-	(*main).super->dead = malloc(sizeof(pthread_mutex_t));
-	(*main).super->print = malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init((*main).super->dead, NULL);
-	pthread_mutex_init((*main).super->print, NULL);
+	pthread_mutex_init(&(*main).super->dead, NULL);
+	pthread_mutex_init(&(*main).super->print, NULL);
 	(*main).super->dead_flag = FALSE;
 	(*main).super->philo_full = 0;
 	(*main).nbr_of_philos = ft_atoi(argv[1]);
