@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   eat.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 00:46:55 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 02:57:49 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/21 18:16:58 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,15 @@ int	eat(t_philo *philo)
 		return (1);
 	}
 	print_status(philo->id, "is eating", get_interval(), philo->super);
-	usleep(philo->time_to_eat * 1000);
+	pthread_mutex_lock(&philo->gen_m);
 	philo->meals_had++;
-	if (philo->meals_had == philo->nbr_of_meals)
+	pthread_mutex_unlock(&philo->gen_m);
+	pthread_mutex_unlock(&philo->super->dead);
+	usleep(philo->time_to_eat * 1000);
+	if (check_full(philo))
 	{
-		pthread_mutex_lock(&philo->state_m);
-		philo->state = FULL;
-		pthread_mutex_unlock(&philo->state_m);
+		release_forks(philo->first_fork, philo->second_fork);
+		return (1);
 	}
 	release_forks(philo->first_fork, philo->second_fork);
 	return (0);

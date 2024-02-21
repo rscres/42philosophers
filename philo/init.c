@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 19:10:15 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/21 02:49:09 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/21 18:55:13 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	init_philos(t_philo **philos, int nbr_of_philos, t_main main, int i)
 	{
 		(*philos)[i].super = main.super;
 		(*philos)[i].id = i + 1;
-		(*philos)[i].state = ALIVE;
 		(*philos)[i].last_meal = 0;
 		(*philos)[i].nbr_of_philos = main.nbr_of_philos;
 		(*philos)[i].time_to_die = main.time_to_die;
@@ -43,9 +42,11 @@ int	init_philos(t_philo **philos, int nbr_of_philos, t_main main, int i)
 		(*philos)[i].time_to_sleep = main.time_to_sleep;
 		(*philos)[i].nbr_of_meals = main.nbr_of_meals;
 		(*philos)[i].meals_had = 0;
+		(*philos)[i].finish_flag = FALSE;
 		assign_forks(&(*philos)[i], main, i);
-		pthread_mutex_init(&(*philos)[i].state_m, NULL);
 		pthread_mutex_init(&(*philos)[i].meal_m, NULL);
+		pthread_mutex_init(&(*philos)[i].gen_m, NULL);
+		pthread_mutex_init(&(*philos)[i].super_finish, NULL);
 	}
 	return (0);
 }
@@ -69,7 +70,6 @@ void	init_data(t_main *main, char **argv)
 	pthread_mutex_init(&(*main).super->dead, NULL);
 	pthread_mutex_init(&(*main).super->print, NULL);
 	(*main).super->dead_flag = FALSE;
-	(*main).super->philo_full = 0;
 	(*main).nbr_of_philos = ft_atoi(argv[1]);
 	(*main).time_to_die = ft_atoi(argv[2]);
 	(*main).time_to_eat = ft_atoi(argv[3]);

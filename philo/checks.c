@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 00:49:20 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 02:58:10 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/21 18:16:16 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,13 @@ int	stop_check(t_philo *philo)
 
 int	check_full(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->gen_m);
 	if (philo->meals_had == philo->nbr_of_meals)
+	{
+		pthread_mutex_unlock(&philo->gen_m);
 		return (1);
+	}
+	pthread_mutex_unlock(&philo->gen_m);
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/21 02:51:08 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/21 18:15:37 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ void	free_data(t_main *main)
 	i = -1;
 	while (++i < main->nbr_of_philos)
 	{
-		pthread_mutex_destroy(&main->philos[i].state_m);
 		pthread_mutex_destroy(&main->forks[i]);
+		pthread_mutex_destroy(&main->philos[i].meal_m);
+		pthread_mutex_destroy(&main->philos[i].gen_m);
 	}
 	pthread_mutex_destroy(&main->super->print);
 	pthread_mutex_destroy(&main->super->dead);

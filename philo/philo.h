@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 02:49:17 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/21 18:54:59 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,9 @@
 # define TRUE 1
 # define FALSE 0
 
-enum	e_states
-{
-	ALIVE,
-	EATING,
-	THINKING,
-	SLEEPING,
-	DEAD,
-	FULL
-};
-
 typedef struct s_supervisor
 {
 	int				dead_flag;
-	int				philo_full;
 	pthread_mutex_t	dead;
 	pthread_mutex_t	print;
 }	t_super;
@@ -44,7 +33,6 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 	int				id;
-	int				state;
 	size_t			last_meal;
 	int				nbr_of_philos;
 	int				time_to_die;
@@ -52,9 +40,11 @@ typedef struct s_philo
 	int				time_to_sleep;
 	int				nbr_of_meals;
 	int				meals_had;
+	int				finish_flag;
 	t_super			*super;
-	pthread_mutex_t	state_m;
+	pthread_mutex_t	super_finish;
 	pthread_mutex_t	meal_m;
+	pthread_mutex_t	gen_m;
 	pthread_mutex_t	*first_fork;
 	pthread_mutex_t	*second_fork;
 }	t_philo;
@@ -62,7 +52,6 @@ typedef struct s_philo
 typedef struct s_main
 {
 	t_philo			*philos;
-	pthread_t		supervisor;
 	t_super			*super;
 	pthread_mutex_t	*forks;
 	int				time_to_die;

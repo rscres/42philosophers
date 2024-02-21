@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 01:06:56 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 03:06:57 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/21 18:56:55 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ void	*routine(void *p)
 	pthread_mutex_lock(&philo->meal_m);
 	philo->last_meal = get_interval();
 	pthread_mutex_unlock(&philo->meal_m);
+	usleep(100 * philo->id);
 	pthread_create(&timeout_thread, NULL, supervisor, philo);
 	pthread_detach(timeout_thread);
-	usleep(100 * philo->id);
-	while (!halt(philo))
+	while (1)
 	{
 		if (eat(philo))
 			break ;
@@ -51,5 +51,7 @@ void	*routine(void *p)
 		if (rest(philo))
 			break ;
 	}
+	pthread_mutex_lock(&philo->super_finish);
+	pthread_mutex_unlock(&philo->super_finish);
 	return (NULL);
 }
