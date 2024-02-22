@@ -6,7 +6,7 @@
 /*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 00:43:54 by renato            #+#    #+#             */
-/*   Updated: 2024/02/22 13:46:40 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/22 14:20:29 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 
 static int	is_dead(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->super->dead);
+	pthread_mutex_lock(&philo->super->dead_m);
 	philo->super->dead_flag = TRUE;
-	pthread_mutex_unlock(&philo->super->dead);
+	pthread_mutex_unlock(&philo->super->dead_m);
 	print_status(philo->id, "died", get_interval(), philo->super);
 	return (1);
 }
 
 static int	is_philo_dead(t_philo *philo, size_t time_to_die)
 {
-	pthread_mutex_lock(&philo->super->dead);
+	pthread_mutex_lock(&philo->super->dead_m);
 	if (philo->super->dead_flag == TRUE)
 	{	
-		pthread_mutex_unlock(&philo->super->dead);
+		pthread_mutex_unlock(&philo->super->dead_m);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->super->dead);
+	pthread_mutex_unlock(&philo->super->dead_m);
 	if (get_interval() - philo->last_meal > time_to_die)
 		return (is_dead(philo));
 	return (0);

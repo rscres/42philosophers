@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 00:49:20 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 21:23:13 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/22 14:20:29 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	stop_check(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->super->dead);
+	pthread_mutex_lock(&philo->super->dead_m);
 	if (philo->super->dead_flag == TRUE)
 	{
-		pthread_mutex_unlock(&philo->super->dead);
+		pthread_mutex_unlock(&philo->super->dead_m);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->super->dead);
+	pthread_mutex_unlock(&philo->super->dead_m);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:28:28 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/21 18:15:37 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/22 14:21:06 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	free_data(t_main *main)
 		pthread_mutex_destroy(&main->philos[i].meal_m);
 		pthread_mutex_destroy(&main->philos[i].gen_m);
 	}
-	pthread_mutex_destroy(&main->super->print);
-	pthread_mutex_destroy(&main->super->dead);
+	pthread_mutex_destroy(&main->super->print_m);
+	pthread_mutex_destroy(&main->super->dead_m);
 	free(main->philos);
 	free(main->super);
 	free(main->forks);

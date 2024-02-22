@@ -6,7 +6,7 @@
 /*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:43:12 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 18:54:59 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/22 14:21:15 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 typedef struct s_supervisor
 {
 	int				dead_flag;
-	pthread_mutex_t	dead;
-	pthread_mutex_t	print;
+	pthread_mutex_t	dead_m;
+	pthread_mutex_t	print_m;
 }	t_super;
 
 typedef struct s_philo

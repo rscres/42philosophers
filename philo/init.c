@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 19:10:15 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/22 00:59:30 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/22 14:21:06 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ static int	init_forks(pthread_mutex_t **forks, int nbr_of_philos)
 void	init_data(t_main *main, char **argv)
 {
 	(*main).super = malloc(sizeof(t_super));
-	pthread_mutex_init(&(*main).super->dead, NULL);
-	pthread_mutex_init(&(*main).super->print, NULL);
+	pthread_mutex_init(&(*main).super->dead_m, NULL);
+	pthread_mutex_init(&(*main).super->print_m, NULL);
 	(*main).super->dead_flag = FALSE;
 	(*main).nbr_of_philos = ft_atoi(argv[1]);
 	(*main).time_to_die = ft_atoi(argv[2]);
