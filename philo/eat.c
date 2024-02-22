@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   eat.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 00:46:55 by renato            #+#    #+#             */
-/*   Updated: 2024/02/22 00:58:54 by renato           ###   ########.fr       */
+/*   Updated: 2024/02/22 12:41:15 by rseelaen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	release_forks(pthread_mutex_t *first_fork, pthread_mutex_t *second_fork)
+static void	release_forks(pthread_mutex_t *first_fork,
+	pthread_mutex_t *second_fork)
 {
 	if (first_fork)
 		pthread_mutex_unlock(first_fork);
