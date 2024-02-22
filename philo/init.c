@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 19:10:15 by rseelaen          #+#    #+#             */
-/*   Updated: 2024/02/21 18:55:13 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/22 00:59:30 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	assign_forks(t_philo *philo, t_main main, int i)
+static void	assign_forks(t_philo *philo, t_main main, int i)
 {
 	if (philo->id == main.nbr_of_philos)
 	{
@@ -26,7 +26,7 @@ void	assign_forks(t_philo *philo, t_main main, int i)
 	}
 }
 
-int	init_philos(t_philo **philos, int nbr_of_philos, t_main main, int i)
+static int	init_philos(t_philo **philos, int nbr_of_philos, t_main main, int i)
 {
 	*philos = malloc(sizeof(t_philo) * nbr_of_philos);
 	if (!*philos)
@@ -51,7 +51,7 @@ int	init_philos(t_philo **philos, int nbr_of_philos, t_main main, int i)
 	return (0);
 }
 
-int	init_forks(pthread_mutex_t **forks, int nbr_of_philos)
+static int	init_forks(pthread_mutex_t **forks, int nbr_of_philos)
 {
 	int	i;
 

@@ -3,30 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rseelaen <rseelaen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: renato <renato@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 01:06:56 by renato            #+#    #+#             */
-/*   Updated: 2024/02/21 18:56:55 by rseelaen         ###   ########.fr       */
+/*   Updated: 2024/02/22 00:59:06 by renato           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	think(t_philo *philo)
+static int	think(t_philo *philo)
 {
 	if (halt(philo))
 		return (1);
 	print_status(philo->id, "is thinking", get_interval(), philo->super);
-	usleep(100 * philo->id); //maybe remove
+	usleep(100 * philo->id);
 	return (0);
 }
 
-int	rest(t_philo *philo)
+static int	rest(t_philo *philo)
 {
 	if (halt(philo))
 		return (1);
 	print_status(philo->id, "is sleeping", get_interval(), philo->super);
 	usleep(philo->time_to_sleep * 1000);
+	return (0);
+}
+
+static int	check_super_finish(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->super_finish);
+	if (philo->finish_flag == TRUE)
+	{
+		pthread_mutex_unlock(&philo->super_finish);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->super_finish);
 	return (0);
 }
 
@@ -51,7 +63,7 @@ void	*routine(void *p)
 		if (rest(philo))
 			break ;
 	}
-	pthread_mutex_lock(&philo->super_finish);
-	pthread_mutex_unlock(&philo->super_finish);
+	while (!check_super_finish(philo))
+		usleep(100);
 	return (NULL);
 }
